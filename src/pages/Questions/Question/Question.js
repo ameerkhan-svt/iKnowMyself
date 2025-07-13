@@ -1,43 +1,10 @@
 import React from "react";
 // import { Row, Col ,Typography, Form } from "antd";
-import { Card, Row, Col, Typography, Input, Spin, Select, Button, message, Descriptions, List, Space, Tooltip, Form} from 'antd'; 
+import { Card, Row, Col, Typography, Input, Spin, Select, Button, message, Checkbox, List, Space, Tooltip, Form} from 'antd'; 
 import TextEditor from "../../../components/TextEditor/TextEditor";
 
 const { Title } = Typography;
 
-const onFinish = value => {
-    console.log("onFinish value", value);
-}
-
-const modules = {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [
-        { list: "ordered" },
-        { list: "bullet" },
-        { indent: "-1" },
-        { indent: "+1" },
-      ],
-      ["link", "code"],
-      ["clean"],
-    ],
-  };
-   
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "code",
-  ];
-   
 
 const CustomLabel = ({title}) => {
     return <span style={{ color: "#5570F1", fontSize:"12px"}}>{title}</span>
@@ -45,6 +12,10 @@ const CustomLabel = ({title}) => {
 
 function Question (props) {
     const [form] = Form.useForm();
+
+    const onFinish = async (values) => {
+        console.log("form values", values);
+    }
 
     return (
     <>
@@ -58,19 +29,24 @@ function Question (props) {
                  layout="vertical"
                  onFinish={onFinish}
                  style={{ maxWidth: 600 }}
+                 initialValues={{ isMultipleChoice: false }}
                >
                 <Row gutter={24}>
                     <Col span={24}>
                         <Form.Item
                             label={<CustomLabel title="Question Title"/>}
-                            name="questionTitle"
+                            name="title"
                             rules={[{ required: true, message: 'Please input Question Title' }]}
                             >
                             <Input placeholder="Question Title"/>
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label={<CustomLabel title="Subject"/>}>
+                        <Form.Item  
+                            name="subject" 
+                            label={<CustomLabel title="Subject"/>}
+                            rules={[{ required: true, message: 'Please input Subject' }]}
+                            >
                             <Select>
                                 <Select.Option value="Physics">Physics</Select.Option>
                                 <Select.Option value="Maths">Maths</Select.Option>
@@ -80,7 +56,11 @@ function Question (props) {
                 
                     </Col>
                     <Col span={12}>
-                        <Form.Item label={<CustomLabel title="Class"/>}>
+                        <Form.Item  
+                            name="classLevel" 
+                            label={<CustomLabel title="Class"/>}
+                            rules={[{ required: true, message: 'Please input class' }]}
+                            >
                             <Select>
                                 <Select.Option value="9">9th</Select.Option>
                                 <Select.Option value="10">10th</Select.Option>
@@ -90,9 +70,17 @@ function Question (props) {
                         </Form.Item>
                     </Col>
                     <Col span={24}>
+                        <Form.Item 
+                        name="isMultipleChoice"
+                        label={<CustomLabel title="Multiple choice"/>}
+                        >
+                            <Checkbox ></Checkbox>
+                        </Form.Item>
+                    </Col>
+                    <Col span={24}>
                     <Form.Item 
-                        wrapperCol={{ offset: 6, span: 16 }}
-                        name="editorContent" 
+                        // wrapperCol={{ offset: 6, span: 16 }}
+                        name="content" 
                         label="Rich Text Editor" 
                         rules={[{ required: true, message: 'Please input content!' }]}
                     >
@@ -105,8 +93,6 @@ function Question (props) {
                         </Button>
                     </Form.Item>
                 </Row>
-                
-                
                </Form>
            </Col>
        </Row>
