@@ -9,7 +9,6 @@ function SignIn ( props ) {
     // const router = useRouter();
 
     const onFinish = async (values) => {
-      console.log("values", values);
         setLoading(true);
         // const { userID, password } = values;
     
