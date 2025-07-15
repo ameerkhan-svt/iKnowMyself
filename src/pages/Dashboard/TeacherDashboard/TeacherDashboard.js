@@ -155,42 +155,30 @@ const testChartData = [
 const topScorerData = [
     {
         name: "Ameer",
-        score: 92,
-    },
-    {
-        name: "Meraj",
-        score: 80,
-    },
-    {
-        name: "Roopesh",
         score: 95,
     },
     {
-        name: "Akhilesh",
-        score: 70,
-    },
-    {
-        name: "Ritesh",
-        score: 86,
-    },
-    {
-        name: "jon snow",
+        name: "Meraj",
         score: 92,
     },
     {
-        name: "Ameer",
+        name: "Roopesh",
+        score: 87,
+    },
+    {
+        name: "Akhilesh",
         score: 80,
     },
     {
-        name: "Ameer",
-        score: 90,
+        name: "Ritesh",
+        score: 80,
     },
     {
-        name: "Ameer",
-        score: 85,
+        name: "jon snow",
+        score: 75,
     },
     {
-        name: "Ameer",
+        name: "Sansa Stark",
         score: 60,
     },
 ]
@@ -286,6 +274,7 @@ function TeacherDasboard(props = defaultProps) {
                     }}
                     title="Test Performance"
                     style={{
+                        height:'100%',
                         borderRadius: '20px',
                         backgroundColor: '#F7F9FB',
                     }}
@@ -299,7 +288,7 @@ function TeacherDasboard(props = defaultProps) {
                 <Card
                     styles={{
                         body: {
-                            padding: '24px',
+                            padding: '0 24px 24px',
                         },
                         header:{
                             borderBottom: 'none',
@@ -309,6 +298,7 @@ function TeacherDasboard(props = defaultProps) {
                     style={{
                         borderRadius: '20px',
                         backgroundColor: '#F7F9FB',
+                        height: '100%',
                     }}
                 >
                     <List 

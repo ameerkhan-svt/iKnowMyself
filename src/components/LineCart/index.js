@@ -1,6 +1,5 @@
 import { Line } from '@ant-design/plots';
 import React from 'react';
-import { createRoot } from 'react-dom';
 
 const LineChart = (props) => {
 
@@ -68,40 +67,33 @@ const LineChart = (props) => {
 ]
 
   const config = {
-    // data: {
-    //   type: 'fetch',
-    //   value: 'https://gw.alipayobjects.com/os/bmw-prod/55424a73-7cb8-4f79-b60d-3ab627ac5698.json',
-    // },
     data,
-    xField: (d) => {console.log("d",d); return new Date(d.year)},
+    theme: {
+        color: "#F9F9FA",
+    },
+    xField: 'month',
     yField: 'value',
-    sizeField: 'value',
+    height: 300,
     shapeField: 'smooth',
-    legend: { size: false },
+    scale: {
+      y: {
+        domainMin: 0,
+      },
+    },
+    interaction: {
+      tooltip: {
+        marker: false,
+      },
+    },
+    style: {
+      lineWidth: 2,
+    },
+    legend: {
+        shape: 'circle',
+    },
     colorField: 'year',
+  
   };
-
-
-//   const config = {
-//     data,
-//     xField: 'month',
-//     yField: 'value',
-//     shapeField: 'smooth',
-//     scale: {
-//       y: {
-//         domainMin: 0,
-//       },
-//     },
-//     interaction: {
-//       tooltip: {
-//         marker: false,
-//       },
-//     },
-//     style: {
-//       lineWidth: 2,
-//     },
-//     colorField: 'year',
-//   };
   return <Line {...config} />;
 };
 
