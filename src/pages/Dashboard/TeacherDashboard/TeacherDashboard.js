@@ -32,6 +32,65 @@ const statusMap = {
     },
   };
 
+  const testStatusMap = {
+    0 : {
+        color: { text: '#92BFFF', bg: '#EDEEFC'},
+        text: 'Pending'
+    },
+    1 : {
+        color: { text: '#FA8C16', bg: '#C9B3ED'},
+        text: 'In Progress'
+    },
+    2 : {
+        color: { text: '#94E9B8', bg: '#FFFFFFCC'},
+        text: 'Complete'
+    },
+  }
+
+
+const testTableDate = [
+    {
+        test: "Physics",
+        date: "June 24,2025",
+        assigned: 12,
+        status: 1,
+
+    },
+    {
+        test: "Physics",
+        date: "June 24,2025",
+        assigned: 12,
+        status: 2,
+
+    },
+    {
+        test: "Physics",
+        date: "June 24,2025",
+        assigned: 12,
+        status: 1,
+
+    },
+    {
+        test: "Physics",
+        date: "June 24,2025",
+        assigned: 12,
+        status: 2,
+
+    },    {
+        test: "Physics",
+        date: "June 24,2025",
+        assigned: 12,
+        status: 1,
+
+    },
+    {
+        test: "Chemistry",
+        date: "June 24,2025",
+        assigned: 12,
+        status: 2,
+
+    }
+]
 
 const testTableCol=
     [
@@ -39,29 +98,38 @@ const testTableCol=
             title: 'Test',
             width: 120,
             dataIndex: 'test',
-            valueType: 'select',
+            render: (text) => text
             
           },
           {
             title: 'Date',
             width: 120,
             dataIndex: 'date',
-            valueType: 'select',
+            render: (text) => text
             
           },
           {
             title: 'Assigned',
             width: 120,
-            dataIndex: 'test',
-            valueType: 'select',
+            dataIndex: 'assigned',
+            render: (text) => `${text}`
             
           },
           {
             title: 'Status',
             width: 120,
-            dataIndex: 'test',
+            dataIndex: 'status',
             render: (_, record) => (
-                            <Tag color={record.status.color}>{record.status.text}</Tag>
+                <span style={{
+                    display: "inline-block",
+                    padding: "5px 10px",
+                    borderRadius: "20px",
+                    minWidth: "95px",
+                    textAlign: 'center',
+                    backgroundColor: testStatusMap[record.status].color.bg,
+                    color: testStatusMap[record.status].color.text
+                }}>{testStatusMap[record.status].text}</span>
+                            // <Tag color={testStatusMap[record.status].color}>{testStatusMap[record.status].text}</Tag>
                           ),
             
           },
@@ -183,22 +251,6 @@ const topScorerData = [
     },
 ]
 
-const testTableDate = [
-    {
-        test: "Physics",
-        date: "june 24,2025",
-        assigned: 12,
-        status: 1,
-
-    },
-    {
-        test: "Physics",
-        date: "june 24,2025",
-        assigned: 12,
-        status: 2,
-
-    }
-]
 
 
 const renderLegend = (props) => {
@@ -320,33 +372,34 @@ function TeacherDasboard(props = defaultProps) {
              {/* Top Rankers List section End */}
             {/* Test Table section start */}
             <Col span={18}>
-                    <Row justify={"space-between"}>
-                                    <Title level={4}>Tests</Title>
-                                    <Button
-                                        style={{
-                                            padding:'20px',
-                                        }}
-                                    >...</Button>
-                                </Row>
                 <ProTable
                     headerTitle="Tests"
-                    size="small"
-                    toolbar={<Button
+                    // size="medium"
+                    colSize={2}
+                    borderColor="#f7f9fb"
+                    toolBarRender={() => [
+                    <Button
                         style={{
-                            padding:'20px',
+                            padding:'10px',
                         }}
-                    >...</Button>}
+                    >...</Button>]}
+                    tableClassName={() => "testTable"}
                     rowClassName={() => "rowClassName1"}
                     dataSource={testTableDate}
-                    style={{
+                    tableStyle={{
+                        // padding: "24px",
                         borderCollapse: "separate", 
                         borderSpacing: '0 1em',
-                        background: '#f7f9fb',
+                        // background: '#f7f9fb',
+                        cellPaddingBlock: "10px"
                     }}
                     styles={{
                         borderCollapse: "separate", 
                         borderSpacing: '0 1em',
                         background: '#f7f9fb',
+                        body: {
+                            padding: '24px',
+                        },
                     }}
                     onRow={(record, index) => ({
                         style: {
@@ -354,14 +407,15 @@ function TeacherDasboard(props = defaultProps) {
                             borderRadius: "20px",
                             margin: "10px",
                             ">td:firstChild": {
-                                borderTopLeftRadius: "10px",
-                                borderBottomLeftRadius: "10px",
+                                borderTopLeftRadius: "20px",
+                                borderBottomLeftRadius: "20px",
                               }
                         }
                       })}
-                    column={testTableCol}
+                    columns={testTableCol}
                     options={false}
                     search={false}
+                    
                 />               
             </Col>
              {/* Test Table section End */}
