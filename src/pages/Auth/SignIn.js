@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Typography, Alert, Image, Row, Col, notification, Card } from 'antd';
+import { APIS } from "../../config/apiEndPoints";
 
 const { Title } = Typography;
 
@@ -9,34 +10,39 @@ function SignIn ( props ) {
     // const router = useRouter();
 
     const onFinish = async (values) => {
-        setLoading(true);
-        // const { userID, password } = values;
-    
-        // const result = await signIn('credentials', {
-        //   redirect: false,
-        //   userID,
-        //   password,
-        // });
-        // console.log("result------------------------", result)
-        // setLoading(false);
-    
-        // if (result.error) {
-        //   if(result.error === 'CredentialsSignin') {
-        //     notification.error({
-        //       message: 'Invalid Credentials',
-        //       description: 'Please check your User ID and Password and try again.',
-        //     });
-        //     setError('Invalid User ID or Password');
-        //   }
-          
-        // } else {
-        //   router.push('/dashboard'); // Redirect to the dashboard or a secure page on successful login
-        // }
-      };
+      setLoading(true);
+      const { email, password } = values;
+      console.log("email", email)
+      console.log("password", password);
+      const response = await fetch(APIS.login, {
+        mode: 'no-cors',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': "*",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      console.log("data", data);
+      // const result = await signIn('credentials', {
+      //   redirect: false,
+      //   email,
+      //   password,
+      // });
+      // setLoading(false);
+  
+      // if (result.error) {
+      //   setError(result.error);
+      // } else {
+      //   router.push('/dashboard/investors'); // Redirect to the dashboard or a secure page on successful login
+      // }
+    };
       
 
     return (
-        <Card style={{ maxWidth: '360px', padding : 12,  display : 'flex', flexFlow : 'column wrap', justifyContent : 'center', margin: 'auto auto' }}>
+        <Card variant="borderless">
             <Row gutter={[10, 20]}>
                 <Col xs={24} align="center">
                     <Image width={140} preview={false} src='/brand-iknomyslf-logo.png'></Image>
@@ -47,16 +53,16 @@ function SignIn ( props ) {
                 <Col xs={24}>
                 {error && <Alert message={error} type="error" showIcon style={{ marginBottom: '1rem' }} />}
           <Form size='large' name="sign_in" layout="vertical" onFinish={onFinish}>
-            <Form.Item
-              label="User ID"
-              name="userID"
-              rules={[
-                { required: true, message: 'Please input your User ID!' },
-                { type: 'text', message: 'Please enter a valid email!' },
-              ]}
-            >
-              <Input placeholder="Enter customer id" />
-            </Form.Item>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: 'Please input your Email' },
+              { type: 'email', message: 'Please enter a valid email!' },
+            ]}
+          >
+            <Input placeholder="Enter your email" />
+          </Form.Item>
     
             <Form.Item
               label="Password"

@@ -36,7 +36,7 @@ const tableListDataSource = [];
 for (let i = 0; i < 50; i += 1) {
     tableListDataSource.push({
       key: i,
-      questionId: '#CM-98' + i, 
+      questionId: 'CM-98' + i, 
       name: 'Question-' + i,
       subject: subjectMap[((Math.floor(Math.random() * 10) % 5) + '')],
       status: statusMap[((Math.floor(Math.random() * 10) % 3) + '') ],
@@ -47,11 +47,12 @@ for (let i = 0; i < 50; i += 1) {
 export default function Questions( props ){
     const [filterBy, setFilterBy] = useState("search");
     const [filterSearchValue, setFilterSearchValue] = useState("");
-
+  console.log("quesitonData", tableListDataSource)
     const columnDef = [
         {
             title: "Question ID",
             dataIndex: "questionId",
+            render: (text) => `#${text}`
         },
         {
             title: "Subject",
@@ -94,7 +95,7 @@ export default function Questions( props ){
               </Tooltip>
               
               <Tooltip key="edit" title="Edit">
-                <Button  icon={<EditOutlined />} href={`/questions/${record.questionId}`} >
+                <Button  icon={<EditOutlined />} href={`/question/${record.questionId}`} >
                   
                 </Button>  
               </Tooltip>

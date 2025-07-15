@@ -1,6 +1,9 @@
 import { Outlet } from "react-router-dom";
 import ProLayout from "@ant-design/pro-layout";
 import getDefaultProps from "./_defaultProps";
+// import Sider from "antd/lib/layout/Sider";
+import { Layout, Menu, theme } from 'antd';
+const { Header, Content, Footer, Sider } = Layout;
 
 
 const user = {
@@ -30,10 +33,25 @@ const defaultProps = getDefaultProps(userRoles);
 const filteredRoutes = filterRoutes(defaultProps.route.routes);
 console.log("filteredRoutes",filteredRoutes);
 
-export default function Layout() {
+export default function HomeLayout() {
+
+  const siderStyle = {
+    overflow: 'auto',
+    height: '100vh',
+    position: 'sticky',
+    insetInlineStart: 0,
+    top: 0,
+    bottom: 0,
+    scrollbarWidth: 'thin',
+    scrollbarGutter: 'stable',
+  };
+
     return (
+      <>
+    
         <ProLayout
             title=""
+            bgLayout="#fff"
             logo='/brand-iknomyslf-logo.png'
             siderWidth={207} 
             {...defaultProps}
@@ -49,7 +67,15 @@ export default function Layout() {
               )}
         >
             <Outlet/>
+           
         </ProLayout>
+        
+        </>
+      //   <Layout>
+      //     <Sider style={siderStyle}>left sidebar</Sider>
+      //     <Content>main content</Content>
+      //     <Sider style={siderStyle}>right sidebar</Sider>
+      // </Layout>
 
     )
 }

@@ -2,16 +2,30 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import SignIn  from "../src/pages/SignIn";
+import Auth  from "./pages/Auth";
 import Dashboard from  "../src/pages/Dashboard";
-import Layout from './layouts/layout';
+import HomeLayout from './layouts/layout';
 import AuthLayout from './layouts/AuthLayout';
 import Questions from './pages/Questions';
 import Question from './pages/Questions/Question/Question';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
-import enUS from "antd/lib/locale/en_US"; // Import the correct locale
+import enUS from "antd/lib/locale/en_US"; // Import the correct locale;
+
+import { createContext } from 'react';
+import  { data }  from './mocks/deafultData.js'
+console.log("default data", data);
+const MyContext = createContext(data);
+
+function ContextProvider({ children }) {
+  return (
+    <MyContext.Provider value={data}>
+      {children}
+    </MyContext.Provider>
+  );
+}
+
 
 const router = createBrowserRouter([
   {
@@ -20,13 +34,13 @@ const router = createBrowserRouter([
     children: [
       { 
         index: true, 
-        element: <SignIn/>
+        element: <Auth/>
       }, 
     ]
   },
   { 
     path: '/', 
-    element: <Layout/>,
+    element: <HomeLayout/>,
     children: [
       {
       path:"dashboard",
@@ -38,6 +52,9 @@ const router = createBrowserRouter([
     },
     {
       path:"question/new",
+      element: <Question/>
+    },{
+      path:"question/:questionId",
       element: <Question/>
     }
   ]
@@ -52,7 +69,9 @@ root.render(
     <ConfigProvider
       locale={enUS}
     >
-      <RouterProvider router={router} />
+      <ContextProvider>
+        <RouterProvider router={router} />
+      </ContextProvider>
     </ConfigProvider>
     
   </React.StrictMode>

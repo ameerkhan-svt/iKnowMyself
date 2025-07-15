@@ -1,17 +1,21 @@
 import React from "react";
 // import { Row, Col ,Typography, Form } from "antd";
-import { Card, Row, Col, Typography, Input, Spin, Select, Button, message, Checkbox, List, Space, Tooltip, Form} from 'antd'; 
+import { useParams } from 'react-router-dom';
+import { Card, Row, Col, Typography, Input, Spin, Select, Button, message, Checkbox, List, Space, Tooltip, Form, Flex} from 'antd'; 
 import TextEditor from "../../../components/TextEditor/TextEditor";
 
 const { Title } = Typography;
 
 
-const CustomLabel = ({title}) => {
-    return <span style={{ color: "#5570F1", fontSize:"12px"}}>{title}</span>
+const CustomLabel = ({title, style}) => {
+    return <span style={{ color: "#5570F1", fontSize:"12px", ...style}}>{title}</span>
 } 
 
 function Question (props) {
     const [form] = Form.useForm();
+    const { questionId } = useParams();
+
+    console.log("questionId", questionId);
 
     const onFinish = async (values) => {
         console.log("form values", values);
@@ -22,7 +26,7 @@ function Question (props) {
       
         <Row>
            <Col span={24}>
-               <Title>Upload Question</Title>
+               <Title>{`${questionId ? "Edit" : "Upload "} Question`}</Title>
            </Col>
            <Col span={24}>
                <Form
@@ -61,7 +65,7 @@ function Question (props) {
                             label={<CustomLabel title="Class"/>}
                             rules={[{ required: true, message: 'Please input class' }]}
                             >
-                            <Select>
+                            <Select style={{ background: 'transparent'}}>
                                 <Select.Option value="9">9th</Select.Option>
                                 <Select.Option value="10">10th</Select.Option>
                                 <Select.Option value="11">11th</Select.Option>
@@ -70,28 +74,39 @@ function Question (props) {
                         </Form.Item>
                     </Col>
                     <Col span={24}>
+                    
                         <Form.Item 
                         name="isMultipleChoice"
-                        label={<CustomLabel title="Multiple choice"/>}
                         >
-                            <Checkbox ></Checkbox>
+                         
+                           {/* <Flex justify="flex-end" align="center"> */}
+                           <CustomLabel title="Multiple choice" style={{marginRight: "10px"}}/>
+                            <Checkbox title="Multiple choice question?" style={{marginleft: "10px"}}/>
+                        
+                            {/* </Flex> */}
+                            
                         </Form.Item>
                     </Col>
                     <Col span={24}>
                     <Form.Item 
-                        // wrapperCol={{ offset: 6, span: 16 }}
-                        name="content" 
-                        label="Rich Text Editor" 
+                        name="content"
                         rules={[{ required: true, message: 'Please input content!' }]}
                     >
                         <TextEditor/>
                     </Form.Item>
                     </Col>
-                    <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                    </Form.Item>
+                    <Col span={24}>
+                        <Form.Item>
+                                <Flex justify="flex-end" align="center">
+                                <Button type="primary" htmlType="submit">
+                                        Submit
+                                    </Button>
+                                
+                                </Flex>
+                            
+                        </Form.Item>
+                    </Col>
+                   
                 </Row>
                </Form>
            </Col>
