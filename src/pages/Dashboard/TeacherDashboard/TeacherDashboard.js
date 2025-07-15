@@ -1,12 +1,13 @@
 import React from "react";
-import { Typography, Row, Col, Card, Progress, List, Space, Table, Tooltip, Button, Tag } from "antd";
+import { Typography, Row, Col, Card, Progress, List, Button, Tag, Statistic } from "antd";
 import { ProTable, StatisticCard } from "@ant-design/pro-components";
 import { Cell, Pie, PieChart, ResponsiveContainer, Legend } from 'recharts';
+import DashboardStatisticCard from "../../../components/DashboardStatisticCard";
+
 import LineChart from "../../../components/LineCart";
-import Sider from "antd/es/layout/Sider";
 
 const { Title, Text  } = Typography;
-const { Statistic } = StatisticCard;
+// const { Statistic } = StatisticCard;
 
 const defaultProps={
     user: {
@@ -260,88 +261,16 @@ function TeacherDasboard(props = defaultProps) {
             </Col>
             {/* Stats card section start */}
             <Col span={6}>
-                <Card 
-                    styles={{
-                            body: {
-                                padding: '24px',
-                                backgroundColor: '#EDEEFC'
-                            },
-                            borderRadius: '20px',
-                        }}
-                        style={{
-                            borderRadius: '20px',
-                        }}
-                    >  
-                        <Statistic 
-                            title={ <Text style={{ fontSize:'16px', fontWeight: '600'}}>Questions</Text>}
-                            layout= "vertical"
-                            value={72 || ""}
-                            valueStyle= {{fontSize: '48px',fontWeight:"600", color: "#000"}}
-                        />
-                </Card>
+                <DashboardStatisticCard title="Questions" value="72"/>
             </Col>
             <Col span={6}>
-                <Card 
-                    styles={{
-                            body: {
-                                padding: '24px',
-                                backgroundColor: '#EDEEFC'
-                            },
-                            borderRadius: '20px',
-                        }}
-                        style={{
-                            borderRadius: '20px',
-                        }}
-                    >  
-                        <Statistic 
-                            title={ <Text style={{ fontSize:'16px', fontWeight: '600'}}>Questions</Text>}
-                            layout= "vertical"
-                            value={72 || ""}
-                            valueStyle= {{fontSize: '48px',fontWeight:"600", color: "#000"}}
-                        />
-                </Card>
+                <DashboardStatisticCard title="Total Tests" value="06"/> 
             </Col>
             <Col span={6}>
-                <Card 
-                    styles={{
-                            body: {
-                                padding: '24px',
-                                backgroundColor: '#EDEEFC'
-                            },
-                            borderRadius: '20px',
-                        }}
-                        style={{
-                            borderRadius: '20px',
-                        }}
-                    >  
-                        <Statistic 
-                            title={ <Text style={{ fontSize:'16px', fontWeight: '600'}}>Questions</Text>}
-                            layout= "vertical"
-                            value={72 || ""}
-                            valueStyle= {{fontSize: '48px',fontWeight:"600", color: "#000"}}
-                        />
-                </Card>
+                <DashboardStatisticCard title="Total Students" value="5"/>
             </Col>
             <Col span={6}>
-                <Card 
-                    styles={{
-                            body: {
-                                padding: '24px',
-                                backgroundColor: '#EDEEFC'
-                            },
-                            borderRadius: '20px',
-                        }}
-                        style={{
-                            borderRadius: '20px',
-                        }}
-                    >  
-                        <Statistic 
-                            title={ <Text style={{ fontSize:'16px', fontWeight: '600'}}>Questions</Text>}
-                            layout= "vertical"
-                            value={72 || ""}
-                            valueStyle= {{fontSize: '48px',fontWeight:"600", color: "#000"}}
-                        />
-                </Card>
+                <DashboardStatisticCard title="Active Students" value="2"/>
             </Col>
             {/* Stats card section End */}
             {/* Test Performance Chart section start */}
