@@ -65,6 +65,9 @@ export default function HomeLayout() {
             menuItemRender={(item, dom) => (
                 <a href={item.path}>{dom}</a>
               )}
+              style={{
+                paddingTop: "0"
+              }}
         >
             <Outlet/>
            
