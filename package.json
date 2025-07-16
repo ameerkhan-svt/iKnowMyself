@@ -11,6 +11,7 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.26.3",
+    "node-fetch": "^2.7.0",
     "react": "^18",
     "react-dom": "^18",
     "react-quill-new": "^3.4.6",
@@ -22,8 +23,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "seed:questions": "node scripts/seedQuestions.js",
+    "seed:questions:50": "node scripts/seedQuestions.js 50",
+    "seed:questions:200": "node scripts/seedQuestions.js 200"
   },
+  "proxy": "http://localhost:1337",
   "eslintConfig": {
     "extends": [
       "react-app",

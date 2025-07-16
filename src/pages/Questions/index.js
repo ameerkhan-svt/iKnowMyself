@@ -1,77 +1,168 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import ProTable from "@ant-design/pro-table";
 import { ProTable } from "@ant-design/pro-components";
-import { Tag, Space, Input, Select, Button, Tooltip } from "antd";
+import { Tag, Space, Input, Select, Button, Tooltip, message, Modal } from "antd";
 import { PlusOutlined, CodepenOutlined, DeleteOutlined, EditOutlined, CalendarOutlined} from "@ant-design/icons";
 import debounce from "lodash/debounce";
+import { useQuestions } from "../../hooks/useQuestions";
 
 const { Option } = Select;
-
-
-const subjectMap = {
-    0: "Physics",
-    1: "Maths",
-    2: "English",
-    3: "Chemistry",
-    4: "Biology",
-}
+const { confirm } = Modal;
 
 const statusMap = {
-    0: {
+    'DRAFT': {
       color: 'blue',
       text: 'Draft',
     },
-    1: {
+    'PUBLISHED': {
       color: 'green',
       text: 'Published',
     },
-    2: {
+    'ARCHIVED': {
       color: 'red',
       text: 'Archived',
     },
   };
 
-const tableListDataSource = [];
-
-for (let i = 0; i < 50; i += 1) {
-    tableListDataSource.push({
-      key: i,
-      questionId: '#CM-98' + i, 
-      name: 'Question-' + i,
-      subject: subjectMap[((Math.floor(Math.random() * 10) % 5) + '')],
-      status: statusMap[((Math.floor(Math.random() * 10) % 3) + '') ],
-      createdOn: Date.now() - Math.floor(Math.random() * 100000),
-    });
-  }
-
 export default function Questions( props ){
     const [filterBy, setFilterBy] = useState("search");
     const [filterSearchValue, setFilterSearchValue] = useState("");
+    const { questions, loading, error, deleteQuestion, refetch } = useQuestions();
+
+    // Show error message when error changes
+    useEffect(() => {
+        if (error) {
+            message.error(`Error loading questions: ${error}`);
+        }
+    }, [error]);
+
+    // Handle delete action
+    const handleDelete = (record) => {
+        confirm({
+            title: 'Are you sure you want to delete this question?',
+            content: `Question: ${record.title}`,
+            okText: 'Yes, Delete',
+            okType: 'danger',
+            cancelText: 'Cancel',
+            onOk: async () => {
+                try {
+                    console.log('Deleting question with ID:', record.id);
+                    const success = await deleteQuestion(record.id);
+                    if (success) {
+                        message.success('Question deleted successfully');
+                        console.log('Question deleted successfully');
+                    } else {
+                        message.error('Failed to delete question');
+                        console.error('Delete operation returned false');
+                    }
+                } catch (error) {
+                    console.error('Error deleting question:', error);
+                    message.error(`Failed to delete question: ${error.message || error}`);
+                }
+            },
+        });
+    };
+
+    const handleFilterSearch = (value) => {
+        console.log('handleFilterSearch value', value);
+        setFilterSearchValue(value);
+        // You can implement search functionality here
+        // For now, we'll just update the state
+    };
+
+    const handleFilterBy = (value) => {
+        console.log('handleFilterBy value', value);
+        setFilterBy(value);
+    };
+
+    const debouncedHandleFilterSearch = debounce((value) => {
+        handleFilterSearch(value);
+    }, 1000); // Adjust debounce delay as needed
 
     const columnDef = [
         {
             title: "Question ID",
-            dataIndex: "questionId",
+            dataIndex: "id",
+            render: (text) => `#CM-${text}`,
         },
         {
             title: "Subject",
             dataIndex: "subject",
+            filters: [
+                { text: 'Mathematics', value: 'Mathematics' },
+                { text: 'Physics', value: 'Physics' },
+                { text: 'Chemistry', value: 'Chemistry' },
+                { text: 'Biology', value: 'Biology' },
+                { text: 'English', value: 'English' },
+                { text: 'Geography', value: 'Geography' },
+                { text: 'History', value: 'History' },
+                { text: 'Literature', value: 'Literature' },
+                { text: 'Computer Science', value: 'Computer Science' },
+                { text: 'Science', value: 'Science' },
+            ],
+            onFilter: (value, record) => record.subject === value,
         },
         {
             title: "Question",
-            dataIndex: "name",
+            dataIndex: "title",
+            ellipsis: true,
+            width: 300,
+        },
+        {
+            title: "Type",
+            dataIndex: "isMultipleChoice",
+            render: (isMultipleChoice) => (
+                <Tag color={isMultipleChoice ? 'blue' : 'green'}>
+                    {isMultipleChoice ? 'Multiple Choice' : 'Text Answer'}
+                </Tag>
+            ),
+            filters: [
+                { text: 'Multiple Choice', value: true },
+                { text: 'Text Answer', value: false },
+            ],
+            onFilter: (value, record) => record.isMultipleChoice === value,
+        },
+        {
+            title: "Difficulty",
+            dataIndex: "difficulty",
+            render: (difficulty) => {
+                const colors = {
+                    'easy': 'green',
+                    'medium': 'orange', 
+                    'hard': 'red'
+                };
+                return (
+                    <Tag color={colors[difficulty] || 'default'}>
+                        {difficulty ? difficulty.charAt(0).toUpperCase() + difficulty.slice(1) : 'Unknown'}
+                    </Tag>
+                );
+            },
+            filters: [
+                { text: 'Easy', value: 'easy' },
+                { text: 'Medium', value: 'medium' },
+                { text: 'Hard', value: 'hard' },
+            ],
+            onFilter: (value, record) => record.difficulty === value,
         },
         {
             title: "Created On",
-            dataIndex: "createdOn",
-            render: (text) => <Space> <CalendarOutlined /> <span>{new Date(text).toLocaleString()}</span></Space>
+            dataIndex: "createdAt",
+            render: (text) => <Space> <CalendarOutlined /> <span>{new Date(text).toLocaleString()}</span></Space>,
+            sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
         },
         {
             title: "Status",
             dataIndex: "status",
-            render: (_, record) => (
-                <Tag color={record.status.color}>{record.status.text}</Tag>
-              ),
+            render: (status) => {
+                const statusInfo = statusMap[status] || { color: 'default', text: status };
+                return <Tag color={statusInfo.color}>{statusInfo.text}</Tag>;
+            },
+            filters: [
+                { text: 'Draft', value: 'DRAFT' },
+                { text: 'Published', value: 'PUBLISHED' },
+                { text: 'Archived', value: 'ARCHIVED' },
+            ],
+            onFilter: (value, record) => record.status === value,
         },
         {
             title: "ACTIONS",
@@ -80,12 +171,12 @@ export default function Questions( props ){
             render: (_, record) => [
               <Space key="actions">
               
-              <Tooltip key="view" title="View">
+              <Tooltip key="delete" title="Delete">
               <Button
                 icon={<DeleteOutlined />}
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log("delete question")
+                  handleDelete(record);
                 }}
                 
               >
@@ -94,7 +185,7 @@ export default function Questions( props ){
               </Tooltip>
               
               <Tooltip key="edit" title="Edit">
-                <Button  icon={<EditOutlined />} href={`/questions/${record.questionId}`} >
+                <Button  icon={<EditOutlined />} href={`/question/${record.id}`} >
                   
                 </Button>  
               </Tooltip>
@@ -103,20 +194,11 @@ export default function Questions( props ){
           },
     ]
 
-    const handleFilterSearch = (value) => {
-        console.log('handleFilterSearch value', value);
-        setFilterSearchValue(value);
-      };
-
-    const handleFilterBy = (value) => {
-        console.log('handleFilterBy value', value);
-        setFilterBy(value);
-      };
-
-    const debouncedHandleFilterSearch = debounce((value) => {
-    handleFilterSearch(value);
-    }, 1000); // Adjust debounce delay as needed
-
+    // Transform questions data for the table
+    const tableData = questions.map(question => ({
+        ...question,
+        key: question.id,
+    }));
 
     
     return (
@@ -125,20 +207,18 @@ export default function Questions( props ){
             headerTitle="Questions"
             bordered
             search={false}
+            loading={loading}
             pagination={{ 
                 pageSize: 10,
+                showSizeChanger: true,
+                showQuickJumper: true,
+                showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} questions`,
             }}
             rowKey="key"
             rowSelection={{}}
-            request={(params, sorter, filter) => {
-                console.log(params, sorter, filter);
-                return Promise.resolve({
-                  data: tableListDataSource,
-                  success: true,
-                });
-              }}
-              options={false}
-              toolBarRender={() => [
+            dataSource={tableData}
+            options={true}
+            toolBarRender={() => [
                 <Space.Compact key="toolbar">
                   <Input onChange={(e)=> debouncedHandleFilterSearch(e.target.value)} key="search" placeholder="Search by question name, subject, class or subject" />
       
@@ -154,7 +234,7 @@ export default function Questions( props ){
                       <Option value="status">Status</Option>
                     </Select>
                   </Space.Compact>,
-                <Button key="add" type="primary" icon={<CodepenOutlined />}>
+                <Button key="test" type="primary" icon={<CodepenOutlined />}>
                   Create Test
                 </Button>,
                 <Button key="add" href="/question/new" type="primary" icon={<PlusOutlined />}>

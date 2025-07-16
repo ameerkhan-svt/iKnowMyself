@@ -3,11 +3,16 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import SignIn  from "../src/pages/SignIn";
+import SignUp  from "../src/pages/SignUp";
 import Dashboard from  "../src/pages/Dashboard";
 import Layout from './layouts/layout';
 import AuthLayout from './layouts/AuthLayout';
 import Questions from './pages/Questions';
 import Question from './pages/Questions/Question/Question';
+import NotFound from './pages/NotFound';
+import ServerError from './pages/ServerError';
+import ErrorBoundary from './components/ErrorBoundary';
+import ProtectedRoute from './components/ProtectedRoute';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
@@ -21,12 +26,16 @@ const router = createBrowserRouter([
       { 
         index: true, 
         element: <SignIn/>
-      }, 
+      },
+      {
+        path: "signup",
+        element: <SignUp/>
+      }
     ]
   },
   { 
     path: '/', 
-    element: <Layout/>,
+    element: <ProtectedRoute><Layout/></ProtectedRoute>,
     children: [
       {
       path:"dashboard",
@@ -39,22 +48,34 @@ const router = createBrowserRouter([
     {
       path:"question/new",
       element: <Question/>
+    },
+    {
+      path:"question/:id",
+      element: <Question/>
     }
   ]
     
   },
+  // Catch-all route for 404 pages
+  {
+    path: "*",
+    element: <NotFound/>
+  },
+  // Manual route for 500 errors (can be used programmatically)
+  {
+    path: "/500",
+    element: <ServerError/>
+  }
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    {/* <App /> */}
-    <ConfigProvider
-      locale={enUS}
-    >
-      <RouterProvider router={router} />
-    </ConfigProvider>
-    
+    <ErrorBoundary>
+      <ConfigProvider locale={enUS}>
+        <RouterProvider router={router} />
+      </ConfigProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );
 
