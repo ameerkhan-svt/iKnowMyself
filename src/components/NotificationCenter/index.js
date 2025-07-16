@@ -38,21 +38,6 @@ const activityList = [
 
 export default function NotificationCenter() {
     return (
-        <Row style={{
-            position: "fixed",
-            top: "56px",
-            overflow: "auto",
-            height: "100%",
-        }}>
-            <Col span={24}>
-            <Card 
-                variant="borderless"
-                style={{
-                height: "100%",
-                width: "100%",
-            }}>
-
-            
             <Row  gutter={[16,16]} >
                 <Col span={24}>
                     Notification List
@@ -124,9 +109,5 @@ export default function NotificationCenter() {
                 />
             </Col>
             </Row>
-            </Card>
-            </Col>
-           
-        </Row>
     )
 }
