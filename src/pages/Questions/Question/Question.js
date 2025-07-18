@@ -351,6 +351,7 @@ function Question (props) {
                         </Form.Item>
                     </Col>
                     <Col span={24}>
+                    
                         <Form.Item 
                         name="isMultipleChoice"
                         label={<CustomLabel title="Multiple choice"/>}

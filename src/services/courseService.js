@@ -1,6 +1,6 @@
 import { getToken } from '../utils/auth';
 
-const getBaseURL = () => process.env.NODE_ENV === 'development' ? '' : (process.env.REACT_APP_BASE_URL || '');
+const getBaseURL = () => process.env.REACT_APP_BASE_URL || 'http://localhost:1337';
 
 export const courseService = {
   // Get all courses

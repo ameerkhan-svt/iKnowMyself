@@ -18,7 +18,7 @@ export const useCourses = () => {
       }
 
       // Use proxy in development, full URL in production
-      const baseURL = process.env.NODE_ENV === 'development' ? '' : (process.env.REACT_APP_BASE_URL || '');
+      const baseURL = process.env.REACT_APP_BASE_URL || 'http://localhost:1337';
       const response = await fetch(`${baseURL}/api/v1/courses`, {
         method: 'GET',
         headers: {

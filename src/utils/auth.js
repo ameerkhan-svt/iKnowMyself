@@ -1,7 +1,12 @@
 // Authentication utility functions
-const getBaseURL = () => process.env.NODE_ENV === 'development' ? '' : (process.env.REACT_APP_BASE_URL || '');
+const getBaseURL = () => process.env.REACT_APP_BASE_URL || 'http://localhost:1337';
+
+// Mock mode for development when backend is not available
+const MOCK_MODE = process.env.REACT_APP_MOCK_AUTH === 'true';
 
 console.log('auth.js loaded successfully');
+console.log('Mock mode:', MOCK_MODE);
+console.log('Base URL:', getBaseURL());
 
 // User management functions
 export const getUser = () => {
@@ -42,44 +47,118 @@ export const isAuthenticated = () => {
 
 export const authAPI = {
   signup: async (userData) => {
-    const response = await fetch(`${getBaseURL()}/api/v1/auth/signup`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
-    
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Signup failed');
+    // Mock mode for development
+    if (MOCK_MODE) {
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+      return {
+        user: {
+          id: 1,
+          email: userData.email,
+          name: userData.name || 'Test User',
+          role: 'teacher'
+        },
+        token: 'mock-jwt-token-' + Date.now()
+      };
     }
-    
-    return response.json();
+
+    try {
+      const response = await fetch(`${getBaseURL()}/api/v1/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+      
+      if (!response.ok) {
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const error = await response.json();
+          throw new Error(error.message || 'Signup failed');
+        } else {
+          // If it's not JSON, it might be HTML (like a 404 page)
+          const text = await response.text();
+          if (response.status === 404) {
+            throw new Error('Backend server not found. Please ensure the backend server is running on http://localhost:1337');
+          } else {
+            throw new Error(`Server error: ${response.status} - ${text.substring(0, 100)}`);
+          }
+        }
+      }
+      
+      return response.json();
+    } catch (error) {
+      // Network error (server not running)
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Cannot connect to backend server. Please ensure the backend server is running on http://localhost:1337');
+      }
+      throw error;
+    }
   },
 
   login: async (credentials) => {
-    const response = await fetch(`${getBaseURL()}/api/v1/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(credentials),
-    });
-    
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Login failed');
+    // Mock mode for development
+    if (MOCK_MODE) {
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+      
+      // Simple mock validation
+      if (credentials.email === 'admin@test.com' && credentials.password === 'password') {
+        return {
+          user: {
+            id: 1,
+            email: credentials.email,
+            name: 'Admin User',
+            role: 'teacher'
+          },
+          token: 'mock-jwt-token-' + Date.now()
+        };
+      } else {
+        throw new Error('Invalid credentials. Use admin@test.com / password for testing');
+      }
     }
-    
-    const data = await response.json();
-    
-    if (data.token) {
-      setToken(data.token);
-      setUser(data.user);
+
+    try {
+      const response = await fetch(`${getBaseURL()}/api/v1/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+      
+      if (!response.ok) {
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const error = await response.json();
+          throw new Error(error.message || 'Login failed');
+        } else {
+          // If it's not JSON, it might be HTML (like a 404 page)
+          const text = await response.text();
+          if (response.status === 404) {
+            throw new Error('Backend server not found. Please ensure the backend server is running on http://localhost:1337');
+          } else {
+            throw new Error(`Server error: ${response.status} - ${text.substring(0, 100)}`);
+          }
+        }
+      }
+      
+      const data = await response.json();
+      
+      if (data.token) {
+        setToken(data.token);
+        setUser(data.user);
+      }
+      
+      return data;
+    } catch (error) {
+      // Network error (server not running)
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Cannot connect to backend server. Please ensure the backend server is running on http://localhost:1337');
+      }
+      throw error;
     }
-    
-    return data;
   },
 
   logout: async () => {

@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import SignIn  from "../src/pages/SignIn";
-import SignUp  from "../src/pages/SignUp";
+import SignIn  from "./pages/Auth/SignIn";
+import SignUp  from "./pages/Auth/SignUp";
 import Dashboard from  "../src/pages/Dashboard";
-import Layout from './layouts/layout';
+import HomeLayout from './layouts/layout';
 import AuthLayout from './layouts/AuthLayout';
 import Questions from './pages/Questions';
 import Question from './pages/Questions/Question/Question';
@@ -16,7 +16,21 @@ import ProtectedRoute from './components/ProtectedRoute';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
-import enUS from "antd/lib/locale/en_US"; // Import the correct locale
+import enUS from "antd/lib/locale/en_US"; // Import the correct locale;
+
+import { createContext } from 'react';
+import  { data }  from './mocks/deafultData.js'
+console.log("default data", data);
+const MyContext = createContext(data);
+
+function ContextProvider({ children }) {
+  return (
+    <MyContext.Provider value={data}>
+      {children}
+    </MyContext.Provider>
+  );
+}
+
 
 const router = createBrowserRouter([
   {
@@ -35,7 +49,7 @@ const router = createBrowserRouter([
   },
   { 
     path: '/', 
-    element: <ProtectedRoute><Layout/></ProtectedRoute>,
+    element: <ProtectedRoute><HomeLayout/></ProtectedRoute>,
     children: [
       {
       path:"dashboard",
