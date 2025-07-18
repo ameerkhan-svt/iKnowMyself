@@ -6,6 +6,7 @@ import Auth  from "./pages/Auth";
 import Dashboard from  "../src/pages/Dashboard";
 import HomeLayout from './layouts/layout';
 import AuthLayout from './layouts/AuthLayout';
+import DashboardLayout from './layouts/DashboardLayout.js';
 import Questions from './pages/Questions';
 import Question from './pages/Questions/Question/Question';
 import reportWebVitals from './reportWebVitals';
@@ -43,9 +44,9 @@ const router = createBrowserRouter([
     element: <HomeLayout/>,
     children: [
       {
-      path:"dashboard",
-      element: <Dashboard/>
-    },
+        path:"/dashboard",
+        element:<Dashboard/>
+      },
     {
       path:"questions",
       element: <Questions/>
