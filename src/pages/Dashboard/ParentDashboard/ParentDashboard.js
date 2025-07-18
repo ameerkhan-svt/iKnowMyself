@@ -9,7 +9,7 @@ export default function ParentDasboard({ user }) {
             <Row gutter={[16, 16]}>
                 <Col span={24}>
                     <Card>
-                        <Title level={2}>Welcome to Parent Dashboard</Title>
+                        <Title level={2}>Welcome to Dashboard</Title>
                         <Text>Hello, {user?.email || 'Parent'}!</Text>
                         <br />
                         <Text type="secondary">Monitor your child's progress and view test results.</Text>

@@ -9,7 +9,7 @@ function TeacherDasboard({ user }) {
             <Row gutter={[16, 16]}>
                 <Col span={24}>
                     <Card>
-                        <Title level={2}>Welcome to Teacher Dashboard</Title>
+                        <Title level={2}>Welcome to Dashboard</Title>
                         <Text>Hello, {user?.email || 'Teacher'}!</Text>
                         <br />
                         <Text type="secondary">Manage your questions, tests, and students from here.</Text>

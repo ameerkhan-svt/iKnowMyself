@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 // import ProTable from "@ant-design/pro-table";
 import { ProTable } from "@ant-design/pro-components";
 import { Tag, Space, Input, Select, Button, Tooltip, message, Modal } from "antd";
-import { PlusOutlined, CodepenOutlined, DeleteOutlined, EditOutlined, CalendarOutlined} from "@ant-design/icons";
+import { PlusOutlined, CodepenOutlined, DeleteOutlined, EditOutlined, CalendarOutlined, EyeOutlined} from "@ant-design/icons";
 import debounce from "lodash/debounce";
 import { useQuestions } from "../../hooks/useQuestions";
 
@@ -182,6 +182,12 @@ export default function Questions( props ){
               >
                 
               </Button>
+              </Tooltip>
+              
+              <Tooltip key="view" title="View">
+                <Button icon={<EyeOutlined />} href={`/question/${record.id}`} >
+                  
+                </Button>  
               </Tooltip>
               
               <Tooltip key="edit" title="Edit">
