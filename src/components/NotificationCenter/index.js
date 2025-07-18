@@ -53,7 +53,7 @@ export default function NotificationCenter() {
                                         }} 
                                         style={{ fontSize: '14px', display: "block"}}
                                         >{item.activity}</Text> 
-                                        <Text style={{ fontSize: '12px', color: "#c00c"}}>{item.time}</Text> 
+                                        <Text style={{ fontSize: '12px', color: "rgba('0,0,0,0.4')"}}>{item.time}</Text> 
                                     </div>
                                 </Space>
                             </List.Item>
@@ -84,9 +84,9 @@ export default function NotificationCenter() {
                                     <Text ellipsis={{
                                         suffix: ''
                                     }} 
-                                    style={{ fontSize: '14px'}}
+                                    style={{ fontSize: '14px', display: "block"}}
                                     >{item.activity}</Text> 
-                                    <Text style={{ fontSize: '12px', color: "#c00c"}}>{item.time}</Text> 
+                                    <Text style={{ fontSize: '12px', color: "rgba('0,0,0,0.4')"}}>{item.time}</Text> 
                                 </div>
                                 
                             </Space>
