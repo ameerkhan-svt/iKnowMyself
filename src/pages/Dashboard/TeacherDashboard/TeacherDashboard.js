@@ -1,12 +1,13 @@
 import React from "react";
-import { Typography, Row, Col, Card, Progress, List, Space, Table, Tooltip, Button, Tag } from "antd";
+import { Typography, Row, Col, Card, Progress, List, Button, Tag, Statistic } from "antd";
 import { ProTable, StatisticCard } from "@ant-design/pro-components";
 import { Cell, Pie, PieChart, ResponsiveContainer, Legend } from 'recharts';
+import DashboardStatisticCard from "../../../components/DashboardStatisticCard";
+
 import LineChart from "../../../components/LineCart";
-import Sider from "antd/es/layout/Sider";
 
 const { Title, Text  } = Typography;
-const { Statistic } = StatisticCard;
+// const { Statistic } = StatisticCard;
 
 const defaultProps={
     user: {
@@ -31,6 +32,65 @@ const statusMap = {
     },
   };
 
+  const testStatusMap = {
+    0 : {
+        color: { text: '#92BFFF', bg: '#EDEEFC'},
+        text: 'Pending'
+    },
+    1 : {
+        color: { text: '#FA8C16', bg: 'rgba(255, 255, 255, 0.8)'},
+        text: 'In Progress'
+    },
+    2 : {
+        color: { text: '#94E9B8', bg: '#EAFBF1'},
+        text: 'Complete'
+    },
+  }
+
+
+const testTableDate = [
+    {
+        test: "Physics",
+        date: "June 24,2025",
+        assigned: 12,
+        status: 0,
+
+    },
+    {
+        test: "Physics",
+        date: "June 24,2025",
+        assigned: 12,
+        status: 2,
+
+    },
+    {
+        test: "Physics",
+        date: "June 24,2025",
+        assigned: 12,
+        status: 1,
+
+    },
+    {
+        test: "Physics",
+        date: "June 24,2025",
+        assigned: 12,
+        status: 2,
+
+    },    {
+        test: "Physics",
+        date: "June 24,2025",
+        assigned: 12,
+        status: 1,
+
+    },
+    // {
+    //     test: "Chemistry",
+    //     date: "June 24,2025",
+    //     assigned: 12,
+    //     status: 2,
+
+    // }
+]
 
 const testTableCol=
     [
@@ -38,29 +98,38 @@ const testTableCol=
             title: 'Test',
             width: 120,
             dataIndex: 'test',
-            valueType: 'select',
+            render: (text) => text
             
           },
           {
             title: 'Date',
             width: 120,
             dataIndex: 'date',
-            valueType: 'select',
+            render: (text) => text
             
           },
           {
             title: 'Assigned',
             width: 120,
-            dataIndex: 'test',
-            valueType: 'select',
+            dataIndex: 'assigned',
+            render: (text) => `${text}`
             
           },
           {
             title: 'Status',
             width: 120,
-            dataIndex: 'test',
+            dataIndex: 'status',
             render: (_, record) => (
-                            <Tag color={record.status.color}>{record.status.text}</Tag>
+                <span style={{
+                    display: "inline-block",
+                    padding: "5px 10px",
+                    borderRadius: "20px",
+                    minWidth: "95px",
+                    textAlign: 'center',
+                    backgroundColor: testStatusMap[record.status].color.bg,
+                    color: testStatusMap[record.status].color.text
+                }}>{testStatusMap[record.status].text}</span>
+                            // <Tag color={testStatusMap[record.status].color}>{testStatusMap[record.status].text}</Tag>
                           ),
             
           },
@@ -154,62 +223,34 @@ const testChartData = [
 const topScorerData = [
     {
         name: "Ameer",
-        score: 92,
-    },
-    {
-        name: "Meraj",
-        score: 80,
-    },
-    {
-        name: "Roopesh",
         score: 95,
     },
     {
-        name: "Akhilesh",
-        score: 70,
-    },
-    {
-        name: "Ritesh",
-        score: 86,
-    },
-    {
-        name: "jon snow",
+        name: "Meraj",
         score: 92,
     },
     {
-        name: "Ameer",
+        name: "Roopesh",
+        score: 87,
+    },
+    {
+        name: "Akhilesh",
         score: 80,
     },
     {
-        name: "Ameer",
-        score: 90,
+        name: "Ritesh",
+        score: 80,
     },
     {
-        name: "Ameer",
-        score: 85,
+        name: "jon snow",
+        score: 75,
     },
     {
-        name: "Ameer",
+        name: "Sansa Stark",
         score: 60,
     },
 ]
 
-const testTableDate = [
-    {
-        test: "Physics",
-        date: "june 24,2025",
-        assigned: 12,
-        status: 1,
-
-    },
-    {
-        test: "Physics",
-        date: "june 24,2025",
-        assigned: 12,
-        status: 2,
-
-    }
-]
 
 
 const renderLegend = (props) => {
@@ -242,7 +283,7 @@ const renderLegend = (props) => {
                         <span style={{ display: "inline-block", width:"10px", height:"10px", borderRadius: "100%", marginRight:"10px", background: `${entry.color}`}}></span>
                         {entry.payload.name}
                     </span>
-                    <span>{entry.payload.value}</span>
+                    <span>{entry.payload.value}%</span>
         </List.Item>
         )}
         >
@@ -260,88 +301,16 @@ function TeacherDasboard(props = defaultProps) {
             </Col>
             {/* Stats card section start */}
             <Col span={6}>
-                <Card 
-                    styles={{
-                            body: {
-                                padding: '24px',
-                                backgroundColor: '#EDEEFC'
-                            },
-                            borderRadius: '20px',
-                        }}
-                        style={{
-                            borderRadius: '20px',
-                        }}
-                    >  
-                        <Statistic 
-                            title={ <Text style={{ fontSize:'16px', fontWeight: '600'}}>Questions</Text>}
-                            layout= "vertical"
-                            value={72 || ""}
-                            valueStyle= {{fontSize: '48px',fontWeight:"600", color: "#000"}}
-                        />
-                </Card>
+                <DashboardStatisticCard title="Questions" value="72"/>
             </Col>
             <Col span={6}>
-                <Card 
-                    styles={{
-                            body: {
-                                padding: '24px',
-                                backgroundColor: '#EDEEFC'
-                            },
-                            borderRadius: '20px',
-                        }}
-                        style={{
-                            borderRadius: '20px',
-                        }}
-                    >  
-                        <Statistic 
-                            title={ <Text style={{ fontSize:'16px', fontWeight: '600'}}>Questions</Text>}
-                            layout= "vertical"
-                            value={72 || ""}
-                            valueStyle= {{fontSize: '48px',fontWeight:"600", color: "#000"}}
-                        />
-                </Card>
+                <DashboardStatisticCard title="Total Tests" value="06"/> 
             </Col>
             <Col span={6}>
-                <Card 
-                    styles={{
-                            body: {
-                                padding: '24px',
-                                backgroundColor: '#EDEEFC'
-                            },
-                            borderRadius: '20px',
-                        }}
-                        style={{
-                            borderRadius: '20px',
-                        }}
-                    >  
-                        <Statistic 
-                            title={ <Text style={{ fontSize:'16px', fontWeight: '600'}}>Questions</Text>}
-                            layout= "vertical"
-                            value={72 || ""}
-                            valueStyle= {{fontSize: '48px',fontWeight:"600", color: "#000"}}
-                        />
-                </Card>
+                <DashboardStatisticCard title="Total Students" value="5"/>
             </Col>
             <Col span={6}>
-                <Card 
-                    styles={{
-                            body: {
-                                padding: '24px',
-                                backgroundColor: '#EDEEFC'
-                            },
-                            borderRadius: '20px',
-                        }}
-                        style={{
-                            borderRadius: '20px',
-                        }}
-                    >  
-                        <Statistic 
-                            title={ <Text style={{ fontSize:'16px', fontWeight: '600'}}>Questions</Text>}
-                            layout= "vertical"
-                            value={72 || ""}
-                            valueStyle= {{fontSize: '48px',fontWeight:"600", color: "#000"}}
-                        />
-                </Card>
+                <DashboardStatisticCard title="Active Students" value="2"/>
             </Col>
             {/* Stats card section End */}
             {/* Test Performance Chart section start */}
@@ -357,6 +326,7 @@ function TeacherDasboard(props = defaultProps) {
                     }}
                     title="Test Performance"
                     style={{
+                        height:'100%',
                         borderRadius: '20px',
                         backgroundColor: '#F7F9FB',
                     }}
@@ -370,7 +340,7 @@ function TeacherDasboard(props = defaultProps) {
                 <Card
                     styles={{
                         body: {
-                            padding: '24px',
+                            padding: '0 24px 24px',
                         },
                         header:{
                             borderBottom: 'none',
@@ -380,6 +350,7 @@ function TeacherDasboard(props = defaultProps) {
                     style={{
                         borderRadius: '20px',
                         backgroundColor: '#F7F9FB',
+                        height: '100%',
                     }}
                 >
                     <List 
@@ -400,34 +371,36 @@ function TeacherDasboard(props = defaultProps) {
             </Col>
              {/* Top Rankers List section End */}
             {/* Test Table section start */}
-            <Col span={18}>
-                    <Row justify={"space-between"}>
-                                    <Title level={4}>Tests</Title>
-                                    <Button
-                                        style={{
-                                            padding:'20px',
-                                        }}
-                                    >...</Button>
-                                </Row>
+            <Col span={18} style={{background: '#f7f9fb'}}>
                 <ProTable
                     headerTitle="Tests"
-                    size="small"
-                    toolbar={<Button
+                    // size="medium"
+                    colSize={2}
+                    borderColor="#f7f9fb"
+                    toolBarRender={() => [
+                    <Button
                         style={{
-                            padding:'20px',
+                            padding:'10px',
                         }}
-                    >...</Button>}
+                    >...</Button>]}
+                    tableClassName={() => "testTable"}
                     rowClassName={() => "rowClassName1"}
                     dataSource={testTableDate}
-                    style={{
+                    tableStyle={{
+                        // padding: "24px",
                         borderCollapse: "separate", 
                         borderSpacing: '0 1em',
-                        background: '#f7f9fb',
+                        // background: '#f7f9fb',
+                        cellPaddingBlock: "10px"
                     }}
                     styles={{
                         borderCollapse: "separate", 
                         borderSpacing: '0 1em',
                         background: '#f7f9fb',
+                        body: {
+                            padding: '24px',
+                            background: '#f7f9fb',
+                        },
                     }}
                     onRow={(record, index) => ({
                         style: {
@@ -435,14 +408,15 @@ function TeacherDasboard(props = defaultProps) {
                             borderRadius: "20px",
                             margin: "10px",
                             ">td:firstChild": {
-                                borderTopLeftRadius: "10px",
-                                borderBottomLeftRadius: "10px",
+                                borderTopLeftRadius: "20px",
+                                borderBottomLeftRadius: "20px",
                               }
                         }
                       })}
-                    column={testTableCol}
+                    columns={testTableCol}
                     options={false}
                     search={false}
+                    
                 />               
             </Col>
              {/* Test Table section End */}

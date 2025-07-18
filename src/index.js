@@ -7,6 +7,7 @@ import SignUp  from "./pages/Auth/SignUp";
 import Dashboard from  "../src/pages/Dashboard";
 import HomeLayout from './layouts/layout';
 import AuthLayout from './layouts/AuthLayout';
+import DashboardLayout from './layouts/DashboardLayout.js';
 import Questions from './pages/Questions';
 import Question from './pages/Questions/Question/Question';
 import NotFound from './pages/NotFound';
@@ -52,9 +53,9 @@ const router = createBrowserRouter([
     element: <ProtectedRoute><HomeLayout/></ProtectedRoute>,
     children: [
       {
-      path:"dashboard",
-      element: <Dashboard/>
-    },
+        path:"/dashboard",
+        element:<Dashboard/>
+      },
     {
       path:"questions",
       element: <Questions/>
